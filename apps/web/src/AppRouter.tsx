@@ -23,8 +23,8 @@ import TermsOfServicePage from './pages/TermsOfServicePage';
 export function AppRouter() {
   return (
     <BrowserRouter>
-      <div className="flex h-screen w-screen bg-surface overflow-hidden">
-        {/* Persistent left navigation rail */}
+      <div className="flex flex-col md:flex-row h-screen w-screen bg-surface overflow-hidden">
+        {/* Persistent navigation: mobile header + desktop sidebar */}
         <NavRail />
 
         {/* Main Content Area */}
