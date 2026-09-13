@@ -78,10 +78,12 @@ export async function imageRoutes(fastify: FastifyInstance): Promise<void> {
     }
 
     try {
-      const result = await capabilityRouter.execute('IMAGE_GENERATION', parsed.data);
+      const result = await capabilityRouter.execute<any, any>('IMAGE_GENERATION', parsed.data);
       return reply.send({
         success: true,
         data: result,
+        imageUrl: result.assetUrl,
+        assetUrl: result.assetUrl,
       });
     } catch (err: any) {
       const statusCode = err instanceof NvidiaError ? err.statusCode : 500;
@@ -108,16 +110,51 @@ export async function imageRoutes(fastify: FastifyInstance): Promise<void> {
     }
 
     try {
-      const result = await capabilityRouter.execute('IMAGE_GENERATION', parsed.data);
+      const result = await capabilityRouter.execute<any, any>('IMAGE_GENERATION', parsed.data);
       return reply.send({
         success: true,
         data: result,
+        imageUrl: result.assetUrl,
+        assetUrl: result.assetUrl,
       });
     } catch (err: any) {
       return reply.status(500).send({
         code: err.code || 'IMAGE_ERROR',
         provider: err.provider || 'image-router',
         message: err.message || 'Image generation failed',
+      });
+    }
+  });
+
+  /**
+   * POST /api/images/generate
+   * Direct image generation alias compatible with YouTube Studio & other clients
+   */
+  fastify.post('/images/generate', async (request, reply) => {
+    const parsed = generateSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({
+        code: 'VALIDATION_ERROR',
+        provider: 'image-router',
+        message: parsed.error.errors.map((e) => e.message).join(', '),
+      });
+    }
+
+    try {
+      const result = await capabilityRouter.execute<any, any>('IMAGE_GENERATION', parsed.data);
+      return reply.send({
+        success: true,
+        data: result,
+        imageUrl: result.assetUrl,
+        assetUrl: result.assetUrl,
+      });
+    } catch (err: any) {
+      const statusCode = err instanceof NvidiaError ? err.statusCode : 500;
+      return reply.status(statusCode).send({
+        code: err.code || 'IMAGE_ERROR',
+        provider: err.provider || 'image-router',
+        message: err.message || 'Image generation failed',
+        retryable: Boolean(err.retryable),
       });
     }
   });
