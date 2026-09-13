@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 6%;
+    --foreground: 220 14% 96%;
+    --card: 240 10% 10%;
+    --card-foreground: 220 14% 96%;
+    --border: 240 10% 20%;
+    --input: 240 10% 14%;
+    --primary: 245 58% 58%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 240 10% 14%;
+    --muted-foreground: 220 14% 60%;
+    --accent: 240 10% 18%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-surface-border;
+  }
+
+  html {
+    @apply bg-surface text-white;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-evoly-700;
+  }
+}
+
+@layer components {
+  /* Streaming cursor */
+  .streaming-cursor::after {
+    content: '▋';
+    @apply text-evoly-400 animate-blink ml-0.5;
+  }
+
+  /* Message prose */
+  .message-prose {
+    @apply text-sm leading-relaxed text-slate-200;
+  }
+
+  .message-prose h1,
+  .message-prose h2,
+  .message-prose h3,
+  .message-prose h4 {
+    @apply font-semibold text-white mt-4 mb-2;
+  }
+
+  .message-prose h1 { @apply text-xl; }
+  .message-prose h2 { @apply text-lg; }
+  .message-prose h3 { @apply text-base; }
+
+  .message-prose p {
+    @apply mb-3 last:mb-0;
+  }
+
+  .message-prose ul,
+  .message-prose ol {
+    @apply pl-5 mb-3 space-y-1;
+  }
+
+  .message-prose ul { @apply list-disc; }
+  .message-prose ol { @apply list-decimal; }
+
+  .message-prose li { @apply text-slate-200; }
+
+  .message-prose code {
+    @apply bg-surface-border/60 text-evoly-300 px-1.5 py-0.5 rounded text-xs font-mono;
+  }
+
+  .message-prose pre {
+    @apply mb-3 rounded-lg overflow-hidden;
+  }
+
+  .message-prose pre code {
+    @apply bg-transparent text-inherit p-0;
+  }
+
+  .message-prose table {
+    @apply w-full border-collapse mb-3 text-sm;
+  }
+
+  .message-prose th {
+    @apply text-left px-3 py-2 bg-surface-border/50 text-slate-300 font-medium border border-surface-border;
+  }
+
+  .message-prose td {
+    @apply px-3 py-2 border border-surface-border text-slate-200;
+  }
+
+  .message-prose a {
+    @apply text-evoly-400 underline hover:text-evoly-300;
+  }
+
+  .message-prose blockquote {
+    @apply border-l-4 border-evoly-600 pl-4 italic text-slate-400 my-3;
+  }
+
+  .message-prose strong { @apply text-white font-semibold; }
+  .message-prose em { @apply italic; }
+  .message-prose hr { @apply border-surface-border my-4; }
+}
