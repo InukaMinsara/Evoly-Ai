@@ -20,6 +20,9 @@ function googleSiteVerificationPlugin() {
 
 export default defineConfig({
   plugins: [react(), googleSiteVerificationPlugin()],
+  build: {
+    outDir: 'dist',
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

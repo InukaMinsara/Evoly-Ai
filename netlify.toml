@@ -1,7 +1,7 @@
 # Netlify Configuration for EVOLY AI
 [build]
-  publish = "apps/web/dist"
-  command = "npm run build:web"
+  command = "npm run build"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"
