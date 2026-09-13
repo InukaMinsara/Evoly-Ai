@@ -17,6 +17,8 @@ import WebResearchPage from './pages/WebResearchPage';
 import YouTubeStudioPage from './pages/YouTubeStudioPage';
 import SearchConsolePage from './pages/SearchConsolePage';
 import GitHubPage from './pages/GitHubPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
 
 export function AppRouter() {
   return (
@@ -29,6 +31,8 @@ export function AppRouter() {
         <div className="flex-1 flex min-w-0 overflow-hidden">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/ai" element={<AIAssistantPage />} />
             <Route path="/media" element={<MediaStudioPage />} />
             <Route path="/research" element={<WebResearchPage />} />

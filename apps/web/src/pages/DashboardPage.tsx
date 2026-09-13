@@ -135,6 +135,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    document.title = 'EvolyAI — AI Robotics Engineering Platform';
     void fetchStatus();
   }, []);
 
@@ -300,6 +301,62 @@ export default function DashboardPage() {
             </div>
           </section>
         </div>
+
+        {/* ── Footer / Legal Section ── */}
+        <footer className="mt-12 pt-8 pb-12 border-t border-surface-border" aria-label="Footer">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center shadow-md shadow-evoly-600/20">
+                <span className="text-[9px] font-bold text-white select-none">EV</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-slate-300">EVOLY AI</span>
+                <span className="text-[11px] text-slate-500">
+                  AI-Powered Robotics Engineering Platform
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+              <Link
+                to="/privacy"
+                className="text-slate-300 hover:text-evoly-400 transition-colors font-medium underline-offset-4 hover:underline"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                to="/terms"
+                className="text-slate-300 hover:text-evoly-400 transition-colors font-medium underline-offset-4 hover:underline"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                to="/settings"
+                className="hover:text-slate-200 transition-colors"
+              >
+                Settings
+              </Link>
+              <a
+                href="https://github.com/InukaMinsara/Evoly-Ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-slate-200 transition-colors"
+              >
+                GitHub
+              </a>
+              <a
+                href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL || 'immaster2024@gmail.com'}`}
+                className="hover:text-slate-200 transition-colors"
+              >
+                Contact
+              </a>
+            </div>
+
+            <p className="text-[11px] text-slate-600 text-center md:text-right">
+              &copy; {new Date().getFullYear()} EvolyAI. All rights reserved.
+            </p>
+          </div>
+        </footer>
 
       </div>
     </div>

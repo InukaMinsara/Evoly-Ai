@@ -186,9 +186,70 @@ export function SettingsPage() {
             </div>
           )}
 
-          {(activeTab === 'account' || activeTab === 'appearance') && (
-            <div className="animate-fade-in p-8 text-center border border-dashed border-surface-border rounded-xl">
-              <p className="text-slate-500">This section is under construction.</p>
+          {activeTab === 'account' && (
+            <div className="animate-fade-in space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-200 mb-1">Account & Privacy</h2>
+                <p className="text-sm text-slate-400">Manage your connected accounts, legal policies, and personal data settings.</p>
+              </div>
+
+              <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-4">
+                <h3 className="font-semibold text-white">Google & Integration Data</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  When you sign in or connect with Google OAuth, basic profile details (email, name, avatar) are used to manage your session. Your Google account data is never sold or shared with advertisers.
+                </p>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <a
+                    href="http://localhost:3000/api/oauth/google/search-console/disconnect"
+                    className="px-3.5 py-1.5 text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 rounded-lg transition-colors"
+                  >
+                    Disconnect Google Account
+                  </a>
+                  <a
+                    href="https://myaccount.google.com/permissions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 text-xs font-medium text-slate-300 bg-surface-hover border border-surface-border hover:text-white rounded-lg transition-colors"
+                  >
+                    Manage Google Permissions &rarr;
+                  </a>
+                </div>
+              </div>
+
+              <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-3">
+                <h3 className="font-semibold text-white">Legal & Compliance</h3>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm pt-1">
+                  <a
+                    href="/privacy"
+                    className="text-evoly-400 hover:text-evoly-300 underline font-medium"
+                  >
+                    Privacy Policy
+                  </a>
+                  <span className="text-slate-600 hidden sm:inline">&bull;</span>
+                  <a
+                    href="/terms"
+                    className="text-evoly-400 hover:text-evoly-300 underline font-medium"
+                  >
+                    Terms of Service
+                  </a>
+                  <span className="text-slate-600 hidden sm:inline">&bull;</span>
+                  <span className="text-xs text-slate-500">
+                    Host: evolyai.netlify.app
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'appearance' && (
+            <div className="animate-fade-in space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-200 mb-1">Appearance</h2>
+                <p className="text-sm text-slate-400">Theme and display settings.</p>
+              </div>
+              <div className="bg-surface-card border border-surface-border rounded-xl p-5">
+                <p className="text-sm text-slate-300">EVOLY AI runs in Dark Engineering Mode by default for reduced eye strain during code and circuit development.</p>
+              </div>
             </div>
           )}
 

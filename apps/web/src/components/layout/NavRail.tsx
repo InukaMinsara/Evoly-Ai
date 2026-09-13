@@ -22,6 +22,7 @@ import {
   Youtube,
   Globe,
   Github,
+  Shield,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -56,7 +57,9 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const BOTTOM_ITEMS: NavItem[] = [
-  { label: 'Settings', icon: Settings, path: '/settings' },
+  { label: 'Privacy Policy',   icon: Shield,   path: '/privacy' },
+  { label: 'Terms of Service', icon: FileText, path: '/terms' },
+  { label: 'Settings',         icon: Settings, path: '/settings' },
 ];
 
 interface NavRailProps {
