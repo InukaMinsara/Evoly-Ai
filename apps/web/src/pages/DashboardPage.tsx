@@ -10,6 +10,7 @@ import {
   Loader2,
   Zap,
   Activity,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -105,20 +106,36 @@ export default function DashboardPage() {
   const [statusLoading, setStatusLoading] = useState(true);
   const [statusError, setStatusError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const load = async () => {
+  const fetchStatus = async () => {
+    setStatusLoading(true);
+    setStatusError(null);
+    const endpoints = [
+      '/api/system/status',
+      'http://127.0.0.1:3000/api/system/status',
+      'http://localhost:3000/api/system/status',
+    ];
+
+    for (const url of endpoints) {
       try {
-        const res = await fetch('/api/system/status');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = (await res.json()) as SystemStatus;
-        setSystemStatus(data);
-      } catch (err) {
-        setStatusError('Could not reach API server at http://localhost:3000');
-      } finally {
-        setStatusLoading(false);
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = (await res.json()) as SystemStatus;
+          setSystemStatus(data);
+          setStatusError(null);
+          setStatusLoading(false);
+          return;
+        }
+      } catch {
+        // Try next fallback endpoint
       }
-    };
-    void load();
+    }
+
+    setStatusError('Could not reach API server at http://localhost:3000');
+    setStatusLoading(false);
+  };
+
+  useEffect(() => {
+    void fetchStatus();
   }, []);
 
   const configuredCount = systemStatus
@@ -232,12 +249,21 @@ export default function DashboardPage() {
               )}
 
               {statusError && !statusLoading && (
-                <div className="flex items-start gap-3 p-4">
-                  <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-red-400 font-medium">API server unreachable</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{statusError}</p>
+                <div className="flex items-center justify-between p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-red-400 font-medium">API server unreachable</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{statusError}</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => void fetchStatus()}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-300 bg-surface-hover hover:bg-surface-hover/80 border border-surface-border rounded-lg transition-colors cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Retry
+                  </button>
                 </div>
               )}
 

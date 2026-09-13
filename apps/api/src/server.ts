@@ -33,7 +33,16 @@ export async function buildServer() {
   // CORS
   // ─────────────────────────────────────────────
   await fastify.register(cors, {
-    origin: env.APP_URL,
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
+        origin === env.APP_URL
+      ) {
+        return cb(null, true);
+      }
+      cb(null, false);
+    },
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
