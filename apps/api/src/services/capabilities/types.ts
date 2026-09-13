@@ -104,6 +104,7 @@ export interface VideoResult {
   provider: string;
   model: string;
   videoUrl?: string;
+  thumbnailUrl?: string;
   status: 'queued' | 'running' | 'completed' | 'failed';
   createdAt: string;
   metadata?: Record<string, unknown>;

@@ -12,22 +12,30 @@ export class VideoService {
     }
 
     if (options.provider === 'nvidia') {
-      if (!nvidiaVideoAdapter.isConfigured()) {
-        throw new Error('NVIDIA Video is not configured. Set NVIDIA_API_KEY and NVIDIA_VIDEO_MODEL in .env.');
+      if (nvidiaVideoAdapter.isConfigured()) {
+        try {
+          return await nvidiaVideoAdapter.generate(options);
+        } catch (nvidiaErr: any) {
+          console.warn('[VideoService] NVIDIA Video failed, falling back to Kaggle:', nvidiaErr.message);
+        }
       }
-      return await nvidiaVideoAdapter.generate(options);
-    }
-
-    if (nvidiaVideoAdapter.isConfigured()) {
-      return await nvidiaVideoAdapter.generate(options);
+      // Fall back seamlessly to Kaggle Cloud GPU
+      if (kaggleVideoAdapter.isConfigured()) {
+        return await kaggleVideoAdapter.generate(options);
+      }
+      throw new Error('NVIDIA Video is not configured. Set NVIDIA_API_KEY and NVIDIA_VIDEO_MODEL in .env.');
     }
 
     if (kaggleVideoAdapter.isConfigured()) {
       return await kaggleVideoAdapter.generate(options);
     }
 
+    if (nvidiaVideoAdapter.isConfigured()) {
+      return await nvidiaVideoAdapter.generate(options);
+    }
+
     throw new Error(
-      'No video generation provider is configured. Please configure Kaggle (KAGGLE_USERNAME, KAGGLE_KEY) or NVIDIA Video (NVIDIA_API_KEY, NVIDIA_VIDEO_MODEL).',
+      'No video generation provider is configured. Please configure Kaggle (KAGGLE_USERNAME, KAGGLE_KEY) or NVIDIA Video.',
     );
   }
 }

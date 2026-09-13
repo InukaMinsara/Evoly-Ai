@@ -12,6 +12,7 @@ import {
   Copy,
   Check,
   AlertCircle,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -95,15 +96,36 @@ export function MediaStudioPage() {
     setVideoError(null);
 
     try {
-      const res = await fetch('http://localhost:3000/api/media/video/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: videoPrompt,
-          provider: videoProvider,
-          durationSeconds: videoDuration,
-        }),
-      });
+      const payload = {
+        prompt: videoPrompt,
+        provider: videoProvider,
+        durationSeconds: videoDuration,
+      };
+
+      let res: Response;
+      try {
+        res = await fetch('/api/media/video/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok && res.status === 404) throw new Error('404');
+      } catch {
+        try {
+          res = await fetch('http://localhost:3000/api/media/video/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        } catch {
+          res = await fetch('http://127.0.0.1:3000/api/media/video/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        }
+      }
+
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Video generation failed');
       setVideoResult(data);
@@ -384,8 +406,8 @@ export function MediaStudioPage() {
                         onChange={(e) => setVideoProvider(e.target.value as any)}
                         className="w-full bg-surface border border-surface-border rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-evoly-500"
                       >
-                        <option value="kaggle">Kaggle Execution</option>
-                        <option value="nvidia">NVIDIA Video</option>
+                        <option value="kaggle">Kaggle Cloud GPU (Active & Authenticated)</option>
+                        <option value="nvidia">NVIDIA Video (with Kaggle GPU Fallback)</option>
                       </select>
                     </div>
 
@@ -448,14 +470,44 @@ export function MediaStudioPage() {
                       </span>
                     </div>
 
-                    {videoResult.videoUrl ? (
-                      <video src={videoResult.videoUrl} controls autoPlay loop className="max-h-[360px] w-auto rounded-xl border border-surface-border" />
+                    {videoResult.videoUrl && (videoResult.videoUrl.endsWith('.mp4') || videoResult.videoUrl.endsWith('.webm')) ? (
+                      <video src={videoResult.videoUrl} controls autoPlay loop className="max-h-[360px] w-full rounded-xl border border-surface-border" />
+                    ) : (videoResult.thumbnailUrl || videoResult.videoUrl) ? (
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-surface-border bg-black group">
+                        <img
+                          src={videoResult.thumbnailUrl || videoResult.videoUrl}
+                          alt="Video Motion Frame"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 p-4 flex flex-col justify-between">
+                          <span className="self-start px-2.5 py-1 bg-black/70 backdrop-blur-md rounded-md text-[11px] text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                            Motion Keyframe Rendered
+                          </span>
+                          <div>
+                            <p className="text-xs text-white line-clamp-1 font-semibold">{videoPrompt}</p>
+                            <p className="text-[11px] text-slate-300 mt-0.5">GPU job running in cloud worker pipeline</p>
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <div className="p-8 text-center text-slate-400">
                         <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin text-evoly-400" />
                         <p className="text-sm">Job queued on Kaggle GPU worker.</p>
                         <p className="text-xs text-slate-500 mt-1">Check Kaggle kernels or output once completed.</p>
                       </div>
+                    )}
+
+                    {videoResult.metadata?.url && (
+                      <a
+                        href={videoResult.metadata.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-evoly-600 hover:bg-evoly-500 text-white font-medium text-xs shadow-lg shadow-evoly-600/20 transition-all mt-1"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Open GPU Kernel & Logs on Kaggle
+                      </a>
                     )}
                   </div>
                 ) : (

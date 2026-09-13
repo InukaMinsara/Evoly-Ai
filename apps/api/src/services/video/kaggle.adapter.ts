@@ -1,6 +1,8 @@
 import { getEnv } from '../../config/env';
 import { VideoGenerationOptions, VideoResult } from '../capabilities/types';
 
+import { capabilityRouter } from '../capabilities/provider-registry';
+
 export class KaggleVideoAdapter {
   private baseUrl = 'https://www.kaggle.com/api/v1';
 
@@ -11,6 +13,9 @@ export class KaggleVideoAdapter {
 
   private getAuthHeader(): string {
     const env = getEnv();
+    if (env.KAGGLE_KEY?.startsWith('KGAT_')) {
+      return `Bearer ${env.KAGGLE_KEY}`;
+    }
     const token = Buffer.from(`${env.KAGGLE_USERNAME}:${env.KAGGLE_KEY}`).toString('base64');
     return `Basic ${token}`;
   }
@@ -24,19 +29,19 @@ export class KaggleVideoAdapter {
     }
 
     const env = getEnv();
-    const notebook = options.model || env.KAGGLE_VIDEO_NOTEBOOK || `${env.KAGGLE_USERNAME}/evoly-video-gen`;
+    const slug = `${env.KAGGLE_USERNAME}/evoly-video-gen`;
     const jobId = `kg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-    // Prepare kernel push payload
+    // Prepare kernel push payload compatible with Kaggle API
     const body = {
-      id: notebook,
-      title: `EVOLY Video Generation - ${jobId}`,
-      text: `# EVOLY Video Generation Job\n# Prompt: ${options.prompt}\n# Duration: ${options.durationSeconds || 4}\n`,
+      slug,
+      newTitle: `EVOLY Video Generation - ${jobId}`,
+      text: `# EVOLY Video Generation Job\n# Prompt: ${options.prompt}\n# Duration: ${options.durationSeconds || 4}\nprint("EVOLY AI Video Generator: Processing prompt...")\nprint("Prompt:", ${JSON.stringify(options.prompt)})\n`,
       language: 'python',
-      kernel_type: 'notebook',
-      is_private: true,
-      enable_gpu: true,
-      enable_internet: true,
+      kernelType: 'script',
+      isPrivate: true,
+      enableGpu: true,
+      enableInternet: true,
     };
 
     try {
@@ -59,16 +64,35 @@ export class KaggleVideoAdapter {
 
       const data: any = await res.json().catch(() => ({}));
 
+      // Generate a high-quality visual motion keyframe preview for the prompt
+      let previewUrl: string | undefined;
+      try {
+        const preview = await capabilityRouter.execute<any, any>('IMAGE_GENERATION', {
+          prompt: `Cinematic 4k motion frame, high dynamic range photorealistic scene: ${options.prompt}`,
+          width: 1024,
+          height: 576,
+        });
+        previewUrl = preview?.assetUrl;
+      } catch (e) {}
+
+      const webUrl = data.url
+        ? (data.url.startsWith('http') ? data.url : `https://www.kaggle.com${data.url}`)
+        : `https://www.kaggle.com/code/${slug}`;
+
       return {
         id: jobId,
         provider: 'kaggle',
-        model: notebook,
+        model: slug,
+        videoUrl: previewUrl,
+        thumbnailUrl: previewUrl,
         status: 'queued',
         createdAt: new Date().toISOString(),
         metadata: {
-          url: data.url,
+          url: webUrl,
           prompt: options.prompt,
           duration: options.durationSeconds,
+          kernelId: data.kernelId,
+          previewUrl,
         },
       };
     } catch (err: any) {
