@@ -42,19 +42,19 @@ export function ComponentsPage() {
   );
 
   return (
-    <div className="flex h-full w-full bg-surface">
-      {/* Sidebar */}
-      <div className="w-56 bg-surface-card border-r border-surface-border flex flex-col">
-        <div className="h-14 border-b border-surface-border flex items-center px-4">
+    <div className="flex flex-col md:flex-row h-full w-full bg-surface overflow-hidden">
+      {/* Category Navigation */}
+      <div className="w-full md:w-56 bg-surface-card border-b md:border-b-0 md:border-r border-surface-border flex flex-col flex-shrink-0">
+        <div className="h-10 md:h-14 border-b border-surface-border hidden md:flex items-center px-4">
           <h2 className="text-sm font-semibold text-slate-200">Library</h2>
         </div>
-        <div className="p-2 space-y-1">
+        <div className="p-2 flex md:flex-col overflow-x-auto md:overflow-x-hidden gap-1.5 md:gap-1 custom-scrollbar">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                'w-full text-left px-3 py-2 rounded-lg text-sm transition-colors',
+                'whitespace-nowrap px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm transition-colors text-left flex-shrink-0',
                 activeCategory === cat ? 'bg-evoly-600/20 text-evoly-400 font-medium' : 'text-slate-400 hover:text-slate-200 hover:bg-surface-hover'
               )}
             >
@@ -65,22 +65,22 @@ export function ComponentsPage() {
       </div>
 
       {/* Main Grid */}
-      <div className="flex-1 flex flex-col">
-        <div className="h-14 px-6 border-b border-surface-border flex items-center justify-between">
-          <h1 className="text-sm font-medium text-slate-300">Components / {activeCategory}</h1>
-          <div className="relative w-64">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+        <div className="min-h-14 px-4 sm:px-6 py-2.5 sm:py-0 border-b border-surface-border flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 flex-shrink-0">
+          <h1 className="text-xs sm:text-sm font-medium text-slate-300">Components / {activeCategory}</h1>
+          <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search components..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-surface-card border border-surface-border rounded-lg pl-9 pr-4 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-evoly-500"
+              className="w-full bg-surface-card border border-surface-border rounded-lg pl-9 pr-4 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-evoly-500"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {filtered.map(comp => {
               const Icon = ICONS[comp.icon] || CircuitBoard;

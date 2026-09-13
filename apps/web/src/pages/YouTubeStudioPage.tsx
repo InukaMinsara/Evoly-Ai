@@ -127,19 +127,19 @@ export function YouTubeStudioPage() {
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-y-auto">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-surface-border flex items-center justify-between">
+      <header className="px-4 sm:px-8 py-4 sm:py-6 border-b border-surface-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Youtube className="w-7 h-7 text-red-500" />
-            YouTube Studio & Creator Intelligence
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 sm:gap-3">
+            <Youtube className="w-6 h-6 sm:w-7 sm:h-7 text-red-500 flex-shrink-0" />
+            <span>YouTube Studio</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Real-time analytics, SEO title & description generation, and high-CTR thumbnail creation.
           </p>
         </div>
 
         {/* OAuth Connection Status / Action */}
-        <div>
+        <div className="w-full sm:w-auto">
           {channel ? (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 text-xs">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -148,7 +148,7 @@ export function YouTubeStudioPage() {
           ) : (
             <a
               href="http://localhost:3000/api/oauth/youtube/start"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-medium text-xs shadow-lg shadow-red-600/20 transition-all"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-medium text-xs shadow-lg shadow-red-600/20 transition-all w-full sm:w-auto"
             >
               <Youtube className="w-4 h-4" />
               Connect YouTube Account
@@ -157,7 +157,7 @@ export function YouTubeStudioPage() {
         </div>
       </header>
 
-      <main className="flex-1 p-8 max-w-6xl w-full mx-auto space-y-8">
+      <main className="flex-1 p-4 sm:p-8 max-w-6xl w-full mx-auto space-y-6 sm:space-y-8">
         {/* Channel Analytics Cards */}
         {loading ? (
           <div className="bg-surface-card border border-surface-border rounded-2xl p-6 flex justify-center">

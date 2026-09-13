@@ -148,10 +148,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-y-auto custom-scrollbar">
-      <div className="max-w-5xl mx-auto w-full px-6 py-8 space-y-8">
+      <div className="max-w-5xl mx-auto w-full px-4 sm:px-6 py-5 sm:py-8 space-y-6 sm:space-y-8">
 
         {/* ── Header ── */}
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center shadow-lg shadow-evoly-600/20">
@@ -175,7 +175,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-slate-500 self-start sm:self-auto">
             <Activity className="w-3.5 h-3.5" />
             <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
           </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             <Zap className="w-3.5 h-3.5" />
             Quick Actions
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
             {QUICK_ACTIONS.map((action) => {
               const Icon = action.icon;
               return (

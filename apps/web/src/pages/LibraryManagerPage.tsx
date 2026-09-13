@@ -65,51 +65,51 @@ export function LibraryManagerPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-surface">
-      <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between bg-surface-card/50">
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-5 h-5 text-evoly-500" />
-          <h1 className="text-lg font-semibold text-slate-200">Library Manager</h1>
+    <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
+      <div className="min-h-16 px-4 sm:px-6 py-3 sm:py-0 border-b border-surface-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-surface-card/50 flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <BookOpen className="w-5 h-5 text-evoly-500 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-200">Library Manager</h1>
         </div>
-        <div className="flex bg-surface-border/50 rounded-lg p-1">
+        <div className="flex bg-surface-border/50 rounded-lg p-1 w-full sm:w-auto">
           <button
             onClick={() => setActiveTab('search')}
-            className={cn("px-4 py-1.5 rounded-md text-sm font-medium transition-colors", activeTab === 'search' ? "bg-surface-card text-white shadow-sm" : "text-slate-400 hover:text-slate-200")}
+            className={cn("px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-initial text-center", activeTab === 'search' ? "bg-surface-card text-white shadow-sm" : "text-slate-400 hover:text-slate-200")}
           >
             Search
           </button>
           <button
             onClick={() => setActiveTab('installed')}
-            className={cn("px-4 py-1.5 rounded-md text-sm font-medium transition-colors", activeTab === 'installed' ? "bg-surface-card text-white shadow-sm" : "text-slate-400 hover:text-slate-200")}
+            className={cn("px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-initial text-center", activeTab === 'installed' ? "bg-surface-card text-white shadow-sm" : "text-slate-400 hover:text-slate-200")}
           >
             Installed ({installed.length})
           </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-5xl mx-auto w-full space-y-6">
         {errorBanner && (
-          <div className="flex items-start gap-3 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-3">
-            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
-            <div className="text-sm text-amber-300 leading-relaxed">{errorBanner}</div>
+          <div className="flex items-start gap-2.5 sm:gap-3 rounded-lg border border-amber-700/40 bg-amber-950/30 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm">
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="text-amber-300 leading-relaxed">{errorBanner}</div>
           </div>
         )}
 
         {activeTab === 'search' && (
           <div className="space-y-6">
             <form onSubmit={handleSearch} className="relative max-w-2xl">
-              <Search className="w-5 h-5 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search Arduino libraries (e.g. Servo, DHT, LiquidCrystal)..."
+                placeholder="Search Arduino libraries (Servo, DHT)..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full bg-surface-card border border-surface-border rounded-xl pl-12 pr-24 py-4 text-slate-200 focus:outline-none focus:border-evoly-500 shadow-sm"
+                className="w-full bg-surface-card border border-surface-border rounded-xl pl-10 sm:pl-12 pr-20 sm:pr-24 py-3 sm:py-4 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-evoly-500 shadow-sm"
               />
               <button
                 type="submit"
                 disabled={isSearching || !search.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-evoly-600 hover:bg-evoly-500 text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-colors"
+                className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 px-3 sm:px-4 py-1.5 sm:py-2 bg-evoly-600 hover:bg-evoly-500 text-white text-xs sm:text-sm font-medium rounded-lg disabled:opacity-50 transition-colors"
               >
                 {isSearching ? 'Searching...' : 'Search'}
               </button>

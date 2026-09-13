@@ -175,60 +175,60 @@ export function MediaStudioPage() {
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-y-auto">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-surface-border flex items-center justify-between">
+      <header className="px-4 sm:px-8 py-4 sm:py-6 border-b border-surface-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Sparkles className="w-6 h-6 text-evoly-400" />
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 sm:gap-3">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-evoly-400" />
             Media Studio
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Production-grade generative AI for robotics concepts, animations, and voice synthesis.
           </p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center bg-surface-card border border-surface-border rounded-xl p-1 gap-1">
+        <div className="flex items-center bg-surface-card border border-surface-border rounded-xl p-1 gap-1 w-full sm:w-auto overflow-x-auto">
           <button
             onClick={() => setActiveTab('image')}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+              'flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-1 sm:flex-initial',
               activeTab === 'image'
                 ? 'bg-evoly-600 text-white shadow'
                 : 'text-slate-400 hover:text-white hover:bg-surface-hover',
             )}
           >
-            <ImageIcon className="w-4 h-4" />
+            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Image Studio
           </button>
           <button
             onClick={() => setActiveTab('video')}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+              'flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-1 sm:flex-initial',
               activeTab === 'video'
                 ? 'bg-evoly-600 text-white shadow'
                 : 'text-slate-400 hover:text-white hover:bg-surface-hover',
             )}
           >
-            <Video className="w-4 h-4" />
+            <Video className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Video Studio
           </button>
           <button
             onClick={() => setActiveTab('voice')}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+              'flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-1 sm:flex-initial',
               activeTab === 'voice'
                 ? 'bg-evoly-600 text-white shadow'
                 : 'text-slate-400 hover:text-white hover:bg-surface-hover',
             )}
           >
-            <Volume2 className="w-4 h-4" />
+            <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Voice Studio
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 max-w-6xl w-full mx-auto">
+      <main className="flex-1 p-4 sm:p-8 max-w-6xl w-full mx-auto">
         {/* ─── TAB 1: IMAGE STUDIO ─────────────────────────────────── */}
         {activeTab === 'image' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

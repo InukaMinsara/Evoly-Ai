@@ -52,22 +52,22 @@ export function ProjectsPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-surface">
-      <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between bg-surface-card/50">
-        <div className="flex items-center gap-3">
-          <FolderOpen className="w-5 h-5 text-evoly-500" />
-          <h1 className="text-lg font-semibold text-slate-200">Projects</h1>
+    <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
+      <div className="min-h-16 px-4 sm:px-6 py-3 sm:py-0 border-b border-surface-border flex items-center justify-between gap-3 bg-surface-card/50 flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <FolderOpen className="w-5 h-5 text-evoly-500 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-200">Projects</h1>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-evoly-600 hover:bg-evoly-500 rounded-lg text-sm font-medium text-white shadow-lg shadow-evoly-900/20 transition-all"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-evoly-600 hover:bg-evoly-500 rounded-lg text-xs sm:text-sm font-medium text-white shadow-lg shadow-evoly-900/20 transition-all flex-shrink-0"
         >
           <Plus className="w-4 h-4" />
           New Project
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         {projects.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[60vh] text-center">
             <FolderOpen className="w-16 h-16 text-slate-700 mb-4" />
@@ -83,14 +83,14 @@ export function ProjectsPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {projects.map(project => (
-              <div key={project.id} className="bg-surface-card border border-surface-border rounded-xl p-5 group flex flex-col hover:border-evoly-600/50 transition-colors">
+              <div key={project.id} className="bg-surface-card border border-surface-border rounded-xl p-4 sm:p-5 group flex flex-col hover:border-evoly-600/50 transition-colors">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-semibold text-slate-200 text-lg">{project.name}</h3>
+                  <h3 className="font-semibold text-slate-200 text-base sm:text-lg">{project.name}</h3>
                   <button
                     onClick={(e) => { e.preventDefault(); handleDelete(project.id); }}
-                    className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-slate-500 hover:text-red-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-1"
                     title="Delete project"
                   >
                     <Trash2 className="w-4 h-4" />

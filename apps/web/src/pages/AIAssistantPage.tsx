@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { Conversation } from '@evoly/shared';
 import { Sidebar } from '../components/layout/Sidebar';
 import { TopBar } from '../components/layout/TopBar';
@@ -47,6 +47,8 @@ export default function AIAssistantPage() {
 
   const aiStatus = useAIStatus();
 
+  const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
+
   const handleSelectConversation = useCallback(
     (id: string) => {
       loadConversation(id);
@@ -59,7 +61,7 @@ export default function AIAssistantPage() {
   }, [newConversation]);
 
   return (
-    <div className="flex-1 flex min-w-0 h-full overflow-hidden">
+    <div className="flex-1 flex min-w-0 min-h-0 h-full overflow-hidden">
       {/* Chat sidebar */}
       <Sidebar
         conversations={filteredConversations}
@@ -69,15 +71,18 @@ export default function AIAssistantPage() {
         onSelectConversation={handleSelectConversation}
         onNewChat={handleNewChat}
         onConversationsRefresh={refreshConversations}
+        mobileOpen={mobileHistoryOpen}
+        onCloseMobile={() => setMobileHistoryOpen(false)}
       />
 
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         <TopBar
           title={conversation?.title}
           currentModel={currentModel || aiStatus.model || ''}
           aiStatus={aiStatus}
           onModelChange={setModel}
+          onToggleHistory={() => setMobileHistoryOpen((prev) => !prev)}
         />
 
         {/* Not configured warning */}

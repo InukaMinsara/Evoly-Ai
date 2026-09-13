@@ -127,7 +127,7 @@ export function MessageComposer({
   };
 
   return (
-    <div className="border-t border-surface-border bg-surface/80 backdrop-blur-sm px-4 py-4">
+    <div className="border-t border-surface-border bg-surface/80 backdrop-blur-sm px-2.5 sm:px-4 py-2.5 sm:py-4">
       <div className="max-w-3xl mx-auto">
         <div
           className={cn(
@@ -164,7 +164,7 @@ export function MessageComposer({
             </div>
           )}
 
-          <div className="flex items-end gap-3 px-2 py-1">
+          <div className="flex items-end gap-2 sm:gap-3 px-1.5 sm:px-2 py-1">
             {/* Hidden File Input */}
             <input
               type="file"
@@ -196,7 +196,7 @@ export function MessageComposer({
               rows={1}
               disabled={disabled || isProcessingFiles}
               className={cn(
-                'flex-1 bg-transparent text-sm text-white placeholder-slate-500 resize-none outline-none leading-relaxed',
+                'flex-1 min-w-0 bg-transparent text-sm text-white placeholder-slate-500 resize-none outline-none leading-relaxed',
                 'min-h-[24px] max-h-[200px]',
               )}
               aria-label="Message input"

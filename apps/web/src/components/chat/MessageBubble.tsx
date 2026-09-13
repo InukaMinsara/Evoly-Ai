@@ -57,13 +57,13 @@ export const MessageBubble = memo(function MessageBubble({
   if (message.role === 'user') {
     return (
       <div className="flex justify-end mb-4 group animate-fade-in">
-        <div className="max-w-[80%] space-y-1">
+        <div className="max-w-[92%] sm:max-w-[80%] space-y-1">
           {isEditing ? (
             <div className="space-y-2">
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-w-[300px] bg-surface-card border border-evoly-600/50 rounded-xl px-4 py-3 text-sm text-white resize-none focus:outline-none focus:ring-2 focus:ring-evoly-500"
+                className="w-full min-w-0 sm:min-w-[300px] bg-surface-card border border-evoly-600/50 rounded-xl px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm text-white resize-none focus:outline-none focus:ring-2 focus:ring-evoly-500"
                 rows={Math.min(editContent.split('\n').length + 1, 8)}
                 autoFocus
                 onKeyDown={(e) => {
@@ -94,7 +94,7 @@ export const MessageBubble = memo(function MessageBubble({
             </div>
           ) : (
             <>
-              <div className="bg-evoly-600/20 border border-evoly-600/30 rounded-2xl rounded-tr-sm px-4 py-3">
+              <div className="bg-evoly-600/20 border border-evoly-600/30 rounded-2xl rounded-tr-sm px-3.5 py-2.5 sm:px-4 sm:py-3">
                 {message.images && message.images.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-3">
                     {message.images.map((img, idx) => (
@@ -102,18 +102,18 @@ export const MessageBubble = memo(function MessageBubble({
                         key={idx}
                         src={img}
                         alt={`Attachment ${idx + 1}`}
-                        className="max-w-[200px] max-h-[200px] object-cover rounded-lg border border-evoly-600/40"
+                        className="max-w-[180px] sm:max-w-[200px] max-h-[180px] sm:max-h-[200px] object-cover rounded-lg border border-evoly-600/40"
                         loading="lazy"
                       />
                     ))}
                   </div>
                 )}
-                <p className="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed">
+                <p className="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed break-words">
                   {message.content}
                 </p>
               </div>
-              {/* Actions — show on hover */}
-              <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              {/* Actions — visible on touch */}
+              <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => setIsEditing(true)}
                   disabled={chatStatus === 'streaming'}
@@ -150,7 +150,7 @@ export const MessageBubble = memo(function MessageBubble({
       </div>
 
       {/* Content */}
-      <div className="pl-8">
+      <div className="pl-1 sm:pl-8">
         {/* Tool Activity */}
         {message.toolActivity && message.toolActivity.length > 0 && (
           <div className="mb-3 space-y-2">

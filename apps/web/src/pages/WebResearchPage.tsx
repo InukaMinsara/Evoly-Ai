@@ -62,32 +62,32 @@ export function WebResearchPage() {
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-y-auto">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-surface-border">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <BookOpen className="w-7 h-7 text-evoly-400" />
-          Web Research & Technical Intelligence
+      <header className="px-4 sm:px-8 py-4 sm:py-6 border-b border-surface-border">
+        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 sm:gap-3">
+          <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-evoly-400 flex-shrink-0" />
+          <span>Web Research & Intelligence</span>
         </h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">
           Multi-provider neural and keyword search across Google, Tavily, Exa, Serper, and Jina with automated fallback.
         </p>
       </header>
 
-      <main className="flex-1 p-8 max-w-5xl w-full mx-auto space-y-8">
+      <main className="flex-1 p-4 sm:p-8 max-w-5xl w-full mx-auto space-y-6 sm:space-y-8">
         {/* Search Controls */}
-        <div className="bg-surface-card border border-surface-border rounded-2xl p-6 space-y-4">
-          <div className="flex gap-3">
+        <div className="bg-surface-card border border-surface-border rounded-2xl p-4 sm:p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="Search datasheets, kinematics equations, robotics papers, or circuit diagrams..."
-              className="flex-1 bg-surface border border-surface-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-evoly-500"
+              placeholder="Search datasheets, kinematics equations, robotics papers..."
+              className="flex-1 min-w-0 bg-surface border border-surface-border rounded-xl px-4 py-2.5 sm:py-3 text-sm text-white focus:outline-none focus:border-evoly-500"
             />
             <button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className="px-6 py-3 bg-evoly-600 hover:bg-evoly-500 disabled:opacity-50 text-white font-medium text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-evoly-600/20"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-evoly-600 hover:bg-evoly-500 disabled:opacity-50 text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-evoly-600/20 flex-shrink-0"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               Research

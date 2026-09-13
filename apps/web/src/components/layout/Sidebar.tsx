@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Trash2,
+  X,
 } from 'lucide-react';
 import type { Conversation } from '@evoly/shared';
 import { cn, formatTimestamp, truncateText } from '../../lib/utils';
@@ -20,6 +21,8 @@ interface SidebarProps {
   onSelectConversation: (id: string) => void;
   onNewChat: () => void;
   onConversationsRefresh: () => void;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export function Sidebar({
@@ -30,6 +33,8 @@ export function Sidebar({
   onSelectConversation,
   onNewChat,
   onConversationsRefresh,
+  mobileOpen,
+  onCloseMobile,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -39,166 +44,240 @@ export function Sidebar({
     onConversationsRefresh();
   };
 
-  if (collapsed) {
-    return (
-      <aside className="w-14 h-full bg-surface-card border-r border-surface-border flex flex-col items-center py-4 gap-3 flex-shrink-0">
-        {/* Logo */}
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center">
-          <span className="text-[9px] font-bold text-white">EV</span>
+  const renderConversationList = (isMobile = false) => (
+    <div className="flex-1 overflow-y-auto px-2 pb-4">
+      {conversations.length === 0 ? (
+        <div className="px-3 py-8 text-center">
+          <MessageSquare className="w-8 h-8 text-slate-700 mx-auto mb-2" />
+          <p className="text-xs text-slate-600">
+            {searchQuery ? 'No matching chats' : 'No conversations yet'}
+          </p>
         </div>
+      ) : (
+        <div className="space-y-0.5">
+          {conversations.map((conv) => {
+            const lastMsg = conv.messages[conv.messages.length - 1];
+            const isActive = conv.id === activeConversationId;
 
-        <div className="h-px w-8 bg-surface-border my-1" />
+            return (
+              <div
+                key={conv.id}
+                className={cn(
+                  'group relative flex items-start gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all',
+                  isActive
+                    ? 'bg-evoly-600/20 border border-evoly-600/30'
+                    : 'hover:bg-surface-hover border border-transparent',
+                )}
+                onClick={() => {
+                  onSelectConversation(conv.id);
+                  if (isMobile && onCloseMobile) onCloseMobile();
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onSelectConversation(conv.id);
+                    if (isMobile && onCloseMobile) onCloseMobile();
+                  }
+                }}
+                aria-label={`Open conversation: ${conv.title}`}
+                aria-selected={isActive}
+              >
+                <MessageSquare
+                  className={cn(
+                    'w-3.5 h-3.5 mt-0.5 flex-shrink-0',
+                    isActive ? 'text-evoly-400' : 'text-slate-600',
+                  )}
+                />
+                <div className="flex-1 min-w-0">
+                  <p
+                    className={cn(
+                      'text-xs font-medium truncate',
+                      isActive ? 'text-white' : 'text-slate-300',
+                    )}
+                  >
+                    {conv.title}
+                  </p>
+                  {lastMsg && (
+                    <p className="text-[11px] text-slate-600 truncate mt-0.5">
+                      {truncateText(lastMsg.content.replace(/\n/g, ' '), 60)}
+                    </p>
+                  )}
+                  <p className="text-[10px] text-slate-700 mt-1">
+                    {formatTimestamp(conv.updatedAt)}
+                  </p>
+                </div>
 
-        <button
-          onClick={onNewChat}
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-surface-hover transition-colors"
-          title="New Chat"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
-
-        <div className="flex-1" />
-
-        <button
-          onClick={() => setCollapsed(false)}
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-surface-hover transition-colors"
-          title="Expand sidebar"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      </aside>
-    );
-  }
+                {/* Delete button — accessible on touch screens */}
+                <button
+                  onClick={(e) => handleDelete(e, conv.id)}
+                  className="flex-shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-slate-500 md:text-slate-700 hover:text-red-400 hover:bg-red-500/10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all"
+                  title="Delete conversation"
+                  aria-label="Delete conversation"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <aside className="w-72 h-full bg-surface-card border-r border-surface-border flex flex-col flex-shrink-0">
-      {/* Header */}
-      <div className="px-4 pt-5 pb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center flex-shrink-0">
+    <>
+      {/* ── Mobile Slide-Over Drawer (< md) ── */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+          <aside
+            className="relative w-80 max-w-[85vw] h-full bg-surface-card border-r border-surface-border flex flex-col z-50 shadow-2xl animate-in slide-in-from-left duration-200"
+            aria-label="Mobile conversation history"
+          >
+            {/* Mobile Header */}
+            <div className="px-4 py-3.5 border-b border-surface-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[9px] font-bold text-white">EV</span>
+                </div>
+                <span className="text-sm font-semibold text-white">Chat History</span>
+              </div>
+              <button
+                onClick={onCloseMobile}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-hover transition-colors"
+                aria-label="Close history"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* New Chat Button */}
+            <div className="p-3">
+              <button
+                onClick={() => {
+                  onNewChat();
+                  if (onCloseMobile) onCloseMobile();
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-evoly-600 text-white hover:bg-evoly-500 transition-all text-xs font-medium shadow-sm shadow-evoly-600/30"
+              >
+                <Plus className="w-4 h-4" />
+                New Chat
+              </button>
+            </div>
+
+            {/* Search */}
+            <div className="px-3 mb-2">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-surface-border">
+                <Search className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  placeholder="Search chats..."
+                  className="flex-1 bg-transparent text-xs text-white placeholder-slate-500 outline-none"
+                  aria-label="Search conversations"
+                />
+              </div>
+            </div>
+
+            {/* Conversations */}
+            {renderConversationList(true)}
+          </aside>
+        </div>
+      )}
+
+      {/* ── Desktop Sidebar (>= md) ── */}
+      {collapsed ? (
+        <aside className="hidden md:flex w-14 h-full bg-surface-card border-r border-surface-border flex-col items-center py-4 gap-3 flex-shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center">
             <span className="text-[9px] font-bold text-white">EV</span>
           </div>
-          <div>
-            <span className="text-sm font-bold text-white tracking-tight">EVOLY</span>
-            <span className="text-sm font-bold text-evoly-400 tracking-tight"> AI</span>
+          <div className="h-px w-8 bg-surface-border my-1" />
+          <button
+            onClick={onNewChat}
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-surface-hover transition-colors"
+            title="New Chat"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          <div className="flex-1" />
+          <button
+            onClick={() => setCollapsed(false)}
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-surface-hover transition-colors"
+            title="Expand sidebar"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </aside>
+      ) : (
+        <aside className="hidden md:flex w-72 h-full bg-surface-card border-r border-surface-border flex-col flex-shrink-0">
+          {/* Header */}
+          <div className="px-4 pt-5 pb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-evoly-500 to-evoly-700 flex items-center justify-center flex-shrink-0">
+                <span className="text-[9px] font-bold text-white">EV</span>
+              </div>
+              <div>
+                <span className="text-sm font-bold text-white tracking-tight">EVOLY</span>
+                <span className="text-sm font-bold text-evoly-400 tracking-tight"> AI</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setCollapsed(true)}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-surface-hover transition-colors"
+              title="Collapse sidebar"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
           </div>
-        </div>
-        <button
-          onClick={() => setCollapsed(true)}
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-surface-hover transition-colors"
-          title="Collapse sidebar"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-      </div>
 
-      {/* New Chat */}
-      <div className="px-3 mb-3">
-        <button
-          onClick={onNewChat}
-          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-evoly-600/15 border border-evoly-600/30 text-evoly-300 hover:bg-evoly-600/25 hover:text-white transition-all text-sm font-medium"
-        >
-          <Plus className="w-4 h-4" />
-          New Chat
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="px-3 mb-3">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-border/30 border border-surface-border">
-          <Search className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search chats..."
-            className="flex-1 bg-transparent text-sm text-white placeholder-slate-500 outline-none"
-            aria-label="Search conversations"
-          />
-        </div>
-      </div>
-
-      {/* Conversations list */}
-      <div className="flex-1 overflow-y-auto px-2 pb-4">
-        {conversations.length === 0 ? (
-          <div className="px-3 py-8 text-center">
-            <MessageSquare className="w-8 h-8 text-slate-700 mx-auto mb-2" />
-            <p className="text-xs text-slate-600">
-              {searchQuery ? 'No matching chats' : 'No conversations yet'}
-            </p>
+          {/* New Chat */}
+          <div className="px-3 mb-3">
+            <button
+              onClick={onNewChat}
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-evoly-600/15 border border-evoly-600/30 text-evoly-300 hover:bg-evoly-600/25 hover:text-white transition-all text-sm font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              New Chat
+            </button>
           </div>
-        ) : (
-          <div className="space-y-0.5">
-            {conversations.map((conv) => {
-              const lastMsg = conv.messages[conv.messages.length - 1];
-              const isActive = conv.id === activeConversationId;
 
-              return (
-                <div
-                  key={conv.id}
-                  className={cn(
-                    'group relative flex items-start gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all',
-                    isActive
-                      ? 'bg-evoly-600/20 border border-evoly-600/30'
-                      : 'hover:bg-surface-hover border border-transparent',
-                  )}
-                  onClick={() => onSelectConversation(conv.id)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === 'Enter' && onSelectConversation(conv.id)}
-                  aria-label={`Open conversation: ${conv.title}`}
-                  aria-selected={isActive}
-                >
-                  <MessageSquare
-                    className={cn(
-                      'w-3.5 h-3.5 mt-0.5 flex-shrink-0',
-                      isActive ? 'text-evoly-400' : 'text-slate-600',
-                    )}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className={cn(
-                        'text-xs font-medium truncate',
-                        isActive ? 'text-white' : 'text-slate-300',
-                      )}
-                    >
-                      {conv.title}
-                    </p>
-                    {lastMsg && (
-                      <p className="text-[11px] text-slate-600 truncate mt-0.5">
-                        {truncateText(lastMsg.content.replace(/\n/g, ' '), 60)}
-                      </p>
-                    )}
-                    <p className="text-[10px] text-slate-700 mt-1">
-                      {formatTimestamp(conv.updatedAt)}
-                    </p>
-                  </div>
-
-                  {/* Delete button */}
-                  <button
-                    onClick={(e) => handleDelete(e, conv.id)}
-                    className="flex-shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-slate-700 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
-                    title="Delete conversation"
-                    aria-label="Delete conversation"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </div>
-              );
-            })}
+          {/* Search */}
+          <div className="px-3 mb-3">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-border/30 border border-surface-border">
+              <Search className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder="Search chats..."
+                className="flex-1 bg-transparent text-sm text-white placeholder-slate-500 outline-none"
+                aria-label="Search conversations"
+              />
+            </div>
           </div>
-        )}
-      </div>
 
-      {/* Footer */}
-      <div className="px-4 py-3 border-t border-surface-border">
-        <div className="flex items-center gap-2">
-          <Cpu className="w-3.5 h-3.5 text-slate-600" />
-          <span className="text-[11px] text-slate-600">
-            Local history — stored on this device
-          </span>
-        </div>
-      </div>
-    </aside>
+          {/* Conversations list */}
+          {renderConversationList(false)}
+
+          {/* Footer */}
+          <div className="px-4 py-3 border-t border-surface-border">
+            <div className="flex items-center gap-2">
+              <Cpu className="w-3.5 h-3.5 text-slate-600" />
+              <span className="text-[11px] text-slate-600">
+                Local history — stored on this device
+              </span>
+            </div>
+          </div>
+        </aside>
+      )}
+    </>
   );
 }
+
+

@@ -23,12 +23,12 @@ import TermsOfServicePage from './pages/TermsOfServicePage';
 export function AppRouter() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col md:flex-row h-screen w-screen bg-surface overflow-hidden">
+      <div className="flex flex-col md:flex-row h-screen h-[100dvh] w-full max-w-[100vw] bg-surface overflow-hidden">
         {/* Persistent navigation: mobile header + desktop sidebar */}
         <NavRail />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex min-w-0 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />

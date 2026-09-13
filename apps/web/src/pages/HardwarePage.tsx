@@ -50,23 +50,23 @@ export function HardwarePage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-surface">
-      <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between bg-surface-card/50">
-        <div className="flex items-center gap-3">
-          <HardDrive className="w-5 h-5 text-evoly-500" />
-          <h1 className="text-lg font-semibold text-slate-200">Hardware Devices</h1>
+    <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
+      <div className="min-h-16 px-4 sm:px-6 py-3 sm:py-0 border-b border-surface-border flex items-center justify-between gap-3 bg-surface-card/50 flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <HardDrive className="w-5 h-5 text-evoly-500 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-200">Hardware Devices</h1>
         </div>
         <button
           onClick={handleScan}
           disabled={isScanning}
-          className="flex items-center gap-2 px-3 py-1.5 bg-surface-hover hover:bg-surface-border rounded-lg text-sm text-slate-300 transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-surface-hover hover:bg-surface-border rounded-lg text-xs sm:text-sm text-slate-300 transition-colors flex-shrink-0"
         >
-          <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isScanning ? 'animate-spin' : ''}`} />
           Scan Ports
         </button>
       </div>
 
-      <div className="flex-1 p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div className="flex-1 p-4 sm:p-6 max-w-5xl mx-auto w-full space-y-6 overflow-y-auto">
         
         {/* Bridge Status Banner */}
         <div className={`rounded-xl border p-4 flex items-start gap-4 ${

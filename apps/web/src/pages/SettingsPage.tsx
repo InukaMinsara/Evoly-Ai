@@ -31,14 +31,14 @@ export function SettingsPage() {
   );
 
   return (
-    <div className="flex h-full w-full bg-surface">
-      {/* Sidebar */}
-      <div className="w-64 bg-surface-card border-r border-surface-border flex flex-col">
-        <div className="h-16 border-b border-surface-border flex items-center px-6">
-          <Settings className="w-5 h-5 text-evoly-500 mr-3" />
-          <h1 className="text-lg font-semibold text-slate-200">Settings</h1>
+    <div className="flex flex-col md:flex-row h-full w-full bg-surface overflow-hidden">
+      {/* Tab Navigation */}
+      <div className="w-full md:w-64 bg-surface-card border-b md:border-b-0 md:border-r border-surface-border flex flex-col flex-shrink-0">
+        <div className="h-12 md:h-16 border-b border-surface-border flex items-center px-4 sm:px-6">
+          <Settings className="w-5 h-5 text-evoly-500 mr-2.5 sm:mr-3 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-200">Settings</h1>
         </div>
-        <div className="p-3 space-y-1">
+        <div className="p-2 sm:p-3 flex md:flex-col overflow-x-auto md:overflow-x-hidden gap-1.5 md:gap-1 custom-scrollbar">
           {TABS.map(tab => {
             const Icon = tab.icon;
             return (
@@ -46,11 +46,11 @@ export function SettingsPage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
+                  "whitespace-nowrap flex items-center gap-2 sm:gap-3 px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm transition-colors flex-shrink-0",
                   activeTab === tab.id ? "bg-evoly-600/20 text-evoly-400 font-medium" : "text-slate-400 hover:text-slate-200 hover:bg-surface-hover"
                 )}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 {tab.label}
               </button>
             );
@@ -59,8 +59,8 @@ export function SettingsPage() {
       </div>
 
       {/* Main Area */}
-      <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-        <div className="max-w-3xl mx-auto space-y-8">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar min-w-0 min-h-0">
+        <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
           
           {activeTab === 'developer' && (
             <div className="animate-fade-in space-y-6">

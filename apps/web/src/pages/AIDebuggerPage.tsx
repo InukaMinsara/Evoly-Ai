@@ -24,25 +24,25 @@ export function AIDebuggerPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
-      <div className="h-14 px-6 border-b border-surface-border flex items-center justify-between bg-surface-card/50 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Bug className="w-5 h-5 text-evoly-500" />
+      <div className="h-14 px-4 sm:px-6 border-b border-surface-border flex items-center justify-between bg-surface-card/50 flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <Bug className="w-5 h-5 text-evoly-500 flex-shrink-0" />
           <h1 className="text-sm font-semibold text-slate-200">AI Debugger</h1>
         </div>
         <button
           onClick={analyze}
           disabled={isAnalyzing}
-          className="flex items-center gap-2 px-4 py-1.5 bg-evoly-600 hover:bg-evoly-500 rounded-lg text-sm font-medium text-white shadow-lg transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 bg-evoly-600 hover:bg-evoly-500 rounded-lg text-xs sm:text-sm font-medium text-white shadow-lg transition-all disabled:opacity-50"
         >
-          {isAnalyzing ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
+          {isAnalyzing ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />}
           Analyze with AI
         </button>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
         {/* Left Inputs */}
-        <div className="w-1/2 flex flex-col border-r border-surface-border">
-          <div className="flex-1 flex flex-col border-b border-surface-border">
+        <div className="w-full md:w-1/2 flex flex-col border-b md:border-b-0 md:border-r border-surface-border min-h-[380px] md:min-h-0">
+          <div className="flex-1 flex flex-col border-b border-surface-border min-h-[220px]">
             <div className="h-8 bg-surface-card border-b border-surface-border flex items-center px-3 gap-2">
               <Code2 className="w-3.5 h-3.5 text-slate-400" />
               <span className="text-[10px] uppercase font-semibold text-slate-400">Source Code</span>
@@ -57,7 +57,7 @@ export function AIDebuggerPage() {
               />
             </div>
           </div>
-          <div className="h-48 flex flex-col">
+          <div className="h-40 md:h-48 flex flex-col flex-shrink-0">
             <div className="h-8 bg-surface-card border-y border-surface-border flex items-center px-3 gap-2">
               <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
               <span className="text-[10px] uppercase font-semibold text-slate-400">Compiler Logs</span>
@@ -71,7 +71,7 @@ export function AIDebuggerPage() {
         </div>
 
         {/* Right Output */}
-        <div className="w-1/2 flex flex-col bg-surface-card/30 overflow-y-auto custom-scrollbar">
+        <div className="w-full md:w-1/2 flex flex-col bg-surface-card/30 overflow-y-auto custom-scrollbar">
           {result ? (
             <div className="p-6 space-y-6 animate-fade-in">
               <div className="bg-surface border border-surface-border rounded-xl p-4">

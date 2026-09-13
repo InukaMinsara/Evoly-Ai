@@ -19,6 +19,7 @@ export function GitHubPage() {
   const [selectedRepo, setSelectedRepo] = useState<any | null>(null);
   const [loadingRepos, setLoadingRepos] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<'repos' | 'details'>('repos');
 
   const [activeTab, setActiveTab] = useState<'files' | 'issues' | 'prs'>('files');
   const [currentPath, setCurrentPath] = useState('');
@@ -59,6 +60,7 @@ export function GitHubPage() {
     setSelectedRepo(repo);
     setCurrentPath('');
     setFileContent(null);
+    setMobileTab('details');
     fetchRepoContents(repo.owner.login, repo.name, '');
   };
 
@@ -102,18 +104,18 @@ export function GitHubPage() {
   return (
     <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-surface-border flex items-center justify-between flex-shrink-0">
+      <header className="px-4 sm:px-8 py-4 sm:py-6 border-b border-surface-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 flex-shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Github className="w-7 h-7 text-white" />
-            GitHub Workspace
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 sm:gap-3">
+            <Github className="w-6 h-6 sm:w-7 sm:h-7 text-white flex-shrink-0" />
+            <span>GitHub Workspace</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Browse repositories, inspect firmware source code, and track issues and pull requests.
           </p>
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto">
           {repos.length > 0 ? (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 text-xs">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -122,7 +124,7 @@ export function GitHubPage() {
           ) : (
             <a
               href="http://localhost:3000/api/oauth/github/start"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs border border-surface-border transition-all"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs border border-surface-border transition-all w-full sm:w-auto"
             >
               <Github className="w-4 h-4" />
               Connect GitHub Account
@@ -134,7 +136,12 @@ export function GitHubPage() {
       {/* Main Layout */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
         {/* Repo List Sidebar */}
-        <div className="w-80 border-r border-surface-border bg-surface-card flex flex-col overflow-y-auto p-4 flex-shrink-0">
+        <div
+          className={cn(
+            'border-r border-surface-border bg-surface-card flex flex-col overflow-y-auto p-4 flex-shrink-0',
+            mobileTab === 'details' ? 'hidden md:flex md:w-80' : 'w-full md:w-80'
+          )}
+        >
           <div className="mb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Repositories</span>
           </div>
@@ -184,36 +191,49 @@ export function GitHubPage() {
 
         {/* Repo Content Area */}
         {selectedRepo ? (
-          <div className="flex-1 flex flex-col min-w-0 bg-surface overflow-y-auto">
+          <div
+            className={cn(
+              'flex-1 flex flex-col min-w-0 bg-surface overflow-y-auto',
+              mobileTab === 'repos' ? 'hidden md:flex' : 'flex'
+            )}
+          >
             {/* Repo Header */}
-            <div className="p-6 border-b border-surface-border flex items-center justify-between bg-surface-card/40">
-              <div className="flex items-center gap-3">
-                <GitBranch className="w-5 h-5 text-evoly-400" />
-                <div>
-                  <h2 className="text-base font-bold text-white flex items-center gap-2">
-                    {selectedRepo.full_name}
-                    <a
-                      href={selectedRepo.html_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-slate-500 hover:text-white"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </h2>
-                  <span className="text-xs text-slate-400 font-mono">Default Branch: {selectedRepo.default_branch}</span>
+            <div className="p-4 sm:p-6 border-b border-surface-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-surface-card/40">
+              <div>
+                <button
+                  onClick={() => setMobileTab('repos')}
+                  className="md:hidden text-xs text-evoly-400 hover:text-evoly-300 mb-2 flex items-center gap-1 font-medium"
+                >
+                  ← All Repositories
+                </button>
+                <div className="flex items-center gap-3">
+                  <GitBranch className="w-5 h-5 text-evoly-400 flex-shrink-0" />
+                  <div>
+                    <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                      <span className="truncate max-w-[200px] xs:max-w-xs">{selectedRepo.full_name}</span>
+                      <a
+                        href={selectedRepo.html_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-slate-500 hover:text-white"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </h2>
+                    <span className="text-xs text-slate-400 font-mono">Default: {selectedRepo.default_branch}</span>
+                  </div>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div className="flex bg-surface rounded-xl p-1 border border-surface-border">
+              <div className="flex bg-surface rounded-xl p-1 border border-surface-border overflow-x-auto w-full sm:w-auto">
                 <button
                   onClick={() => {
                     setActiveTab('files');
                     fetchRepoContents(selectedRepo.owner.login, selectedRepo.name, currentPath);
                   }}
                   className={cn(
-                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex-1 sm:flex-initial text-center',
                     activeTab === 'files' ? 'bg-evoly-600 text-white' : 'text-slate-400 hover:text-white',
                   )}
                 >
@@ -222,7 +242,7 @@ export function GitHubPage() {
                 <button
                   onClick={() => fetchIssuesAndPRs('issues')}
                   className={cn(
-                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex-1 sm:flex-initial text-center',
                     activeTab === 'issues' ? 'bg-evoly-600 text-white' : 'text-slate-400 hover:text-white',
                   )}
                 >
@@ -231,7 +251,7 @@ export function GitHubPage() {
                 <button
                   onClick={() => fetchIssuesAndPRs('prs')}
                   className={cn(
-                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex-1 sm:flex-initial text-center',
                     activeTab === 'prs' ? 'bg-evoly-600 text-white' : 'text-slate-400 hover:text-white',
                   )}
                 >

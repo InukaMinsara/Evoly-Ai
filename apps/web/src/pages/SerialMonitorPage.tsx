@@ -30,22 +30,22 @@ export function SerialMonitorPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-surface">
+    <div className="flex-1 flex flex-col h-full bg-surface overflow-hidden">
       {/* Header Toolbar */}
-      <div className="h-14 px-4 border-b border-surface-border flex items-center justify-between bg-surface-card/50 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Terminal className="w-5 h-5 text-evoly-500" />
-          <h1 className="text-sm font-semibold text-slate-200">Serial Monitor</h1>
+      <div className="min-h-14 px-3 sm:px-4 py-2 sm:py-0 border-b border-surface-border flex flex-wrap items-center justify-between gap-2 bg-surface-card/50 flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-evoly-500 flex-shrink-0" />
+          <h1 className="text-xs sm:text-sm font-semibold text-slate-200">Serial Monitor</h1>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <select 
             disabled={isConnected}
             value={port}
             onChange={e => setPort(e.target.value)}
-            className="bg-surface border border-surface-border rounded-lg px-3 py-1.5 text-xs text-slate-300 disabled:opacity-50"
+            className="bg-surface border border-surface-border rounded-lg px-2 sm:px-3 py-1.5 text-xs text-slate-300 disabled:opacity-50 max-w-[120px] sm:max-w-none truncate"
           >
-            <option value="COM3">COM3 (USB Serial)</option>
+            <option value="COM3">COM3</option>
             <option value="COM4">COM4</option>
           </select>
           
@@ -53,7 +53,7 @@ export function SerialMonitorPage() {
             disabled={isConnected}
             value={baud}
             onChange={e => setBaud(e.target.value)}
-            className="bg-surface border border-surface-border rounded-lg px-3 py-1.5 text-xs text-slate-300 disabled:opacity-50"
+            className="bg-surface border border-surface-border rounded-lg px-2 sm:px-3 py-1.5 text-xs text-slate-300 disabled:opacity-50 max-w-[105px] sm:max-w-none truncate"
           >
             <option value="9600">9600 baud</option>
             <option value="115200">115200 baud</option>
@@ -61,7 +61,7 @@ export function SerialMonitorPage() {
 
           <button
             onClick={toggleConnect}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               isConnected 
                 ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' 
                 : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
